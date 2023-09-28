@@ -1,0 +1,6 @@
+keyword = 'jam'
+seq1 = 'My mother prepares very yummy jam.'
+seq2 = 'Signal jammers are the reason for no signal.'
+
+print(get_semantic(seq1, keyword))
+print(get_semantic(seq2, keyword))
