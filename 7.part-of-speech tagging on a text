@@ -1,0 +1,19 @@
+import nltk
+from nltk.tokenize import word_tokenize
+from nltk import pos_tag
+
+# Download the missing resource
+nltk.download('averaged_perceptron_tagger')
+
+# Sample text for part-of-speech tagging
+text = "NLTK is a leading platform for building Python programs to work with human language data."
+
+# Tokenize the text into words
+words = word_tokenize(text)
+
+# Perform part-of-speech tagging
+pos_tags = pos_tag(words)
+
+# Print the part-of-speech tagged words
+print("Part-of-Speech Tagging:")
+print(pos_tags)
