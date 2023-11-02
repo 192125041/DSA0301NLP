@@ -1,0 +1,16 @@
+transitions = {
+    'q0': {'a': 'q1', 'b': 'q0'},
+    'q1': {'a': 'q1', 'b': 'q2'},
+    'q2': {'a': 'q1', 'b': 'q0'}
+}
+current_state = 'q0'
+input_string = input("Enter a string: ")
+for char in input_string:
+    if char in transitions[current_state]:
+        current_state = transitions[current_state][char]
+    else:
+        current_state = 'q0'
+if current_state == 'q2':
+    print("The string ends with 'ab'.")
+else:
+    print("The string does not end with 'ab'.")
