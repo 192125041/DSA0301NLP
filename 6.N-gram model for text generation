@@ -1,0 +1,24 @@
+import random
+from collections import defaultdict
+sample_text = "This is a sample text. It can be used to demonstrate bigram text generation."
+words = sample_text.split()
+bigrams = defaultdict(list)
+for i in range(len(words) - 1):
+    bigrams[words[i]].append(words[i + 1])
+def generate_text(start_word, num_words=20):
+    generated_text = [start_word]
+    current_word = start_word
+    for _ in range(num_words - 1):
+        next_word_options = bigrams.get(current_word, [])
+        if next_word_options:
+            next_word = random.choice(next_word_options)
+            generated_text.append(next_word)
+            current_word = next_word
+        else:
+            break
+    return ' '.join(generated_text)
+start_word = random.choice(words)
+generated_text = generate_text(start_word)
+
+print("Generated Text:")
+print(generated_text)
