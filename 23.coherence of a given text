@@ -1,0 +1,20 @@
+import nltk
+def evaluate_coherence(text):
+    sentences = nltk.sent_tokenize(text)
+    transitional_words = ["however", "therefore", "consequently", "although", "nevertheless", "in addition", "for example", "in conclusion"]
+    coherence_score = 0  
+    for i in range(len(sentences) - 1):
+        sentence1 = sentences[i]
+        sentence2 = sentences[i + 1]
+        for word in transitional_words:
+            if word in sentence1.lower() or word in sentence2.lower():
+                coherence_score += 1
+                break
+    coherence_score /= len(sentences) - 1
+    return coherence_score
+if __name__ == "__main__":
+    text = """
+    Textual coherence is an essential aspect of effective writing. It helps readers follow the logical flow of ideas within a text. However, achieving coherence can be challenging. Therefore, writers often use transitional words and phrases. In addition, maintaining a consistent topic and theme throughout a text is vital. For example, in a persuasive essay, it's crucial to use persuasive language consistently. In conclusion, evaluating coherence is an important step in assessing the quality of a text.
+    """
+    coherence_score = evaluate_coherence(text)
+    print("Coherence Score:", coherence_score)
