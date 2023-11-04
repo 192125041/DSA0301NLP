@@ -1,0 +1,35 @@
+grammar = {
+    'S': ['NP VP', 'S CONJ S', 'NP VP PP'],
+    'NP': ['Det N', 'Det N PP', 'PRP'],
+    'VP': ['V NP', 'V NP PP', 'V'],
+    'PP': ['P NP'],
+    'Det': ['the', 'a'],
+    'N': ['cat', 'dog', 'man', 'woman'],
+    'V': ['chased', 'saw', 'ate'],
+    'PRP': ['I', 'you', 'he', 'she', 'it'],
+    'P': ['in', 'on', 'with'],
+    'CONJ': ['and', 'or']
+}
+def parse(sentence, productions, symbol='S'):
+    if sentence == '':
+        return True
+    for production in productions.get(symbol, []):
+        words = production.split()
+        if len(words) > len(sentence):
+            continue
+        match = True
+        rest_sentence = sentence
+        for word in words:
+            if word not in rest_sentence:
+                match = False
+                break
+            rest_sentence = rest_sentence.split(word, 1)[-1].strip()
+        if match and parse(rest_sentence, productions, words[-1]):
+            return True
+    return False
+input_sentence = "the cat chased the dog"
+result = parse(input_sentence.split(), grammar)
+if result:
+    print("Input sentence is valid according to the grammar.")
+else:
+    print("Input sentence is not valid according to the grammar.")
