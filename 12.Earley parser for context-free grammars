@@ -1,0 +1,50 @@
+class EarleyItem:
+    def __init__(self, production, dot_position, start_column):
+        self.production = production
+        self.dot_position = dot_position
+        self.start_column = start_column
+def earley_parser(grammar, input_string):
+    chart = [[] for _ in range(len(input_string) + 1)]
+    initial_production = list(grammar.keys())[0]
+    initial_item = EarleyItem(initial_production, 0, 0)
+    chart[0].append(initial_item)
+    for i in range(len(input_string) + 1):
+        while True:
+            added = False
+            for item in chart[i]:
+                if item.dot_position < len(grammar[item.production]):
+                    next_symbol = grammar[item.production][item.dot_position]
+                    if next_symbol.isalpha():
+                        for production in grammar.get(next_symbol, []):
+                            new_item = EarleyItem(next_symbol, 0, i)
+                            if new_item not in chart[i]:
+                                chart[i].append(new_item)
+                                added = True
+                    else:
+                        if input_string[i:i + len(next_symbol)] == next_symbol:
+                            new_item = EarleyItem(item.production, item.dot_position + 1, item.start_column)
+                            if new_item not in chart[i + 1]:
+                                chart[i + 1].append(new_item)
+                                added = True
+            if not added:
+                break
+    accepting_item = EarleyItem(initial_production, len(grammar[initial_production]), 0)
+    return accepting_item in chart[len(input_string)]
+grammar = {
+    'S': ['NP VP', 'S CONJ S', 'NP VP PP'],
+    'NP': ['Det N', 'Det N PP', 'PRP'],
+    'VP': ['V NP', 'V NP PP', 'V'],
+    'PP': ['P NP'],
+    'Det': ['the', 'a'],
+    'N': ['cat', 'dog', 'man', 'woman'],
+    'V': ['chased', 'saw', 'ate'],
+    'PRP': ['I', 'you', 'he', 'she', 'it'],
+    'P': ['in', 'on', 'with'],
+    'CONJ': ['and', 'or']
+}
+input_string = "the cat chased the dog"
+result = earley_parser(grammar, input_string.split())
+if result:
+    print("Input string is accepted by the grammar.")
+else:
+    print("Input string is not accepted by the grammar.")
