@@ -1,0 +1,24 @@
+import nltk
+grammar = nltk.CFG.fromstring("""
+    S -> NP_SG VP_SG | NP_PL VP_PL
+    NP_SG -> Det_SG N_SG
+    NP_PL -> Det_PL N_PL
+    VP_SG -> V_SG NP_SG
+    VP_PL -> V_PL NP_PL
+    Det_SG -> 'the' | 'a'
+    Det_PL -> 'the'
+    N_SG -> 'dog' | 'cat' | 'man' | 'woman'
+    N_PL -> 'dogs' | 'cats' | 'men' | 'women'
+    V_SG -> 'chases' | 'sees'
+    V_PL -> 'chase' | 'see'
+""")
+def check_agreement(sentence):
+    words = nltk.word_tokenize(sentence)
+    parser = nltk.ChartParser(grammar)
+    for tree in parser.parse(words):
+        return True
+    return False
+sentence1 = "the dog chases the cat"
+sentence2 = "the dogs chase the cats"
+print("Sentence 1 Agreement:", check_agreement(sentence1))
+print("Sentence 2 Agreement:", check_agreement(sentence2))
