@@ -1,0 +1,16 @@
+import re
+rules = [
+    (r'.*ing$', 'VERB'),   
+    (r'.*ed$', 'VERB'),    
+    (r'.*ly$', 'ADV'),     
+    (r'.*s$', 'NOUN'),      
+    (r'^-?[0-9]+$', 'NUM')  
+]
+def transform_based_tagging(word):
+    for pattern, pos_tag in rules:
+        if re.match(pattern, word, re.IGNORECASE):
+            return pos_tag
+    return 'UNKNOWN'  
+words = ["running", "played", "quickly", "cats", "123"]
+tagged_words = [(word, transform_based_tagging(word)) for word in words]
+print(tagged_words)
