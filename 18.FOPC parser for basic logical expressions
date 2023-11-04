@@ -1,0 +1,46 @@
+import re
+
+class FOPCParser:
+    def __init__(self):
+        self.variable_pattern = re.compile(r'^[a-z][a-zA-Z0-9]*$')
+        self.constant_pattern = re.compile(r'^[A-Z][a-zA-Z0-9]*$')
+        self.predicate_pattern = re.compile(r'^[a-z][a-zA-Z0-9]*$')
+        self.operators = ['NOT', 'AND', 'OR', 'IMPLIES', 'FORALL', 'EXISTS']
+
+    def is_variable(self, token):
+        return re.match(self.variable_pattern, token) is not None
+
+    def is_constant(self, token):
+        return re.match(self.constant_pattern, token) is not None
+
+    def is_predicate(self, token):
+        return re.match(self.predicate_pattern, token) is not None
+
+    def parse(self, expression):
+        tokens = re.findall(r'[A-Za-z0-9(),]+', expression)
+        stack = []
+        for token in tokens:
+            if token in self.operators:
+                stack.append(token)
+            elif token == '(':
+                stack.append(token)
+            elif token == ')':
+                sub_expression = []
+                while stack[-1] != '(':
+                    sub_expression.append(stack.pop())
+                stack.pop()  # Pop '('
+                operator = stack.pop()
+                sub_expression.reverse()
+                stack.append((operator, sub_expression))
+            elif self.is_variable(token):
+                stack.append(('VARIABLE', token))
+            elif self.is_constant(token):
+                stack.append(('CONSTANT', token))
+            elif self.is_predicate(token):
+                stack.append(('PREDICATE', token))
+        return stack[0]
+if __name__ == "__main__":
+    parser = FOPCParser()
+    expression = "FORALL x (EXISTS y (P(x, y) AND Q(y)) OR NOT R(z))"
+    parsed_expression = parser.parse(expression)
+    print(parsed_expression)
