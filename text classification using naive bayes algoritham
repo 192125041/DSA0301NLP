@@ -1,0 +1,30 @@
+from sklearn.feature_extraction.text import TfidfVectorizer
+from sklearn.naive_bayes import MultinomialNB
+from sklearn.model_selection import train_test_split
+from sklearn import metrics
+
+# Assuming 'X' is a list of text documents and 'y' is a list of corresponding labels (categories)
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2, random_state=42)
+
+# Convert text to numerical features using TF-IDF
+tfidf_vectorizer = TfidfVectorizer()
+X_train_tfidf = tfidf_vectorizer.fit_transform(X_train)
+X_test_tfidf = tfidf_vectorizer.transform(X_test)
+
+# Create and train the Naive Bayes model
+nb_classifier = MultinomialNB()
+nb_classifier.fit(X_train_tfidf, y_train)
+
+# Make predictions on the test set
+y_pred = nb_classifier.predict(X_test_tfidf)
+
+# Evaluate the model
+accuracy = metrics.accuracy_score(y_test, y_pred)
+precision = metrics.precision_score(y_test, y_pred, average='weighted')
+recall = metrics.recall_score(y_test, y_pred, average='weighted')
+f1_score = metrics.f1_score(y_test, y_pred, average='weighted')
+
+print(f"Accuracy: {accuracy:.2f}")
+print(f"Precision: {precision:.2f}")
+print(f"Recall: {recall:.2f}")
+print(f"F1 Score: {f1_score:.2f}")
